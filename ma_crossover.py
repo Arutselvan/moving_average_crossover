@@ -54,14 +54,17 @@ class MovingAverageCrossover:
         #plt.show()
 
     def backtest_portfolio(self):
+
+        """ Backtesting the portfolio with initial capital equal to the specified amount """
+
         self.positions = pd.DataFrame(index=self.signals.index).fillna(0.0)
-        self.positions['positioninrs'] = self.stocks_per_trade*self.signals['signal']
+        self.positions['positioninrs'] = self.stocks_per_trade*self.signals['signal'] #each position has stocks equal to stocks per trade specified
         self.portfolio = self.positions.multiply(self.close_price, axis=0)
         self.pos_diff = self.positions.diff()
-        self.portfolio['holdings'] = (self.positions.multiply(self.close_price,axis=0)).sum(axis=1)
-        self.portfolio['cash'] = self.capital - (self.pos_diff.multiply(self.close_price,axis=0)).sum(axis=1).cumsum()
-        self.portfolio['total'] = self.portfolio['cash'] + self.portfolio['holdings']
-        self.portfolio['returns'] = self.portfolio['total'].pct_change()
+        self.portfolio['holdings'] = (self.positions.multiply(self.close_price,axis=0)).sum(axis=1) #total amount in holdings
+        self.portfolio['cash'] = self.capital - (self.pos_diff.multiply(self.close_price,axis=0)).sum(axis=1).cumsum() #total in cash
+        self.portfolio['total'] = self.portfolio['cash'] + self.portfolio['holdings'] #total value
+        self.portfolio['returns'] = self.portfolio['total'].pct_change() #returns as percentage change
         del self.portfolio['positioninrs']
 
     def plot_portfolio(self):

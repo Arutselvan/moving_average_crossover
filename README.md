@@ -33,4 +33,5 @@ python3 ma_crossover.py
 ## Bugs
 
 * Fix No look ahead bias
-* Add comments`
+* Add comments
+* Add labels and title to graphs
