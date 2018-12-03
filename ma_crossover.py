@@ -1,0 +1,100 @@
+import pandas as pd
+import numpy as np
+from pandas_datareader import data
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+
+class MovingAverageCrossover:
+
+    def __init__(self, ticker, capital, stocks_per_trade, start_date, end_date, short_window, long_window):
+        self.ticker = ticker
+        self.capital = capital
+        self.stocks_per_trade = stocks_per_trade
+        self.start_date = start_date
+        self.end_date = end_date
+        self.short_window = short_window
+        self.long_window = long_window
+
+    def get_data(self):
+        self.stock_data = data.DataReader(ticker,'yahoo',start_date,end_date) #get data from yahoo finance
+        self.close_price = self.stock_data['Close'] #get the closing prices
+
+        """ Get all weekdays and fill dates with latest price when price is not available """
+        all_weekdays = pd.date_range(start=self.start_date, end=self.end_date, freq='B') 
+        self.close_price = self.close_price.reindex(all_weekdays)
+        self.close_price = self.close_price.fillna(method='ffill')
+
+    def calc_ma(self):
+        self.sma = self.close_price.rolling(window=self.short_window).mean() #calculate short term moving average
+        self.lma = self.close_price.rolling(window=self.long_window).mean() #calculate long term moving average
+
+    def generate_signals(self):
+
+        """ Generate buy and sell trade signals """
+
+        self.signals = pd.DataFrame(index=self.close_price.index)
+        self.signals['signal'] = 0.0
+        self.signals['signal'][self.short_window:] = np.where(self.sma[self.short_window:]>self.lma[self.short_window:],1.0,0.0) #1 when short term average is greater than long term average
+        self.signals['positions'] = self.signals['signal'].diff() #diff will give 1 (buy signal) when sma crosses lma and -1 (sell) when lma crosses sma
+
+    def plot_signals_with_ma(self):
+
+        """ Plot short term and long term moving average with closing price and trade signals """ 
+
+        fig,ax = plt.subplots(figsize=(20,15))
+        ax.plot(self.close_price.index,self.close_price, label="Price")
+        ax.plot(self.sma.index, self.sma, label="50 days moving average")
+        ax.plot(self.lma.index, self.lma, label="200 days moving average")
+        ax.plot(self.signals.loc[self.signals.positions == 1.0].index, self.sma[self.signals.positions == 1.0], '^', markersize=10, color='g', label="Buy signal")
+        ax.plot(self.signals.loc[self.signals.positions == -1.0].index, self.sma[self.signals.positions == -1.0], 'v', markersize=10, color='r', label="Sell signal")
+        ax.set_xlabel('Date')
+        ax.set_ylabel('Adjusted closing price')
+        ax.legend()
+        plt.savefig('signals_with_ma.png')
+        #plt.show()
+
+    def backtest_portfolio(self):
+        self.positions = pd.DataFrame(index=self.signals.index).fillna(0.0)
+        self.positions['positioninrs'] = self.stocks_per_trade*self.signals['signal']
+        self.portfolio = self.positions.multiply(self.close_price, axis=0)
+        self.pos_diff = self.positions.diff()
+        self.portfolio['holdings'] = (self.positions.multiply(self.close_price,axis=0)).sum(axis=1)
+        self.portfolio['cash'] = self.capital - (self.pos_diff.multiply(self.close_price,axis=0)).sum(axis=1).cumsum()
+        self.portfolio['total'] = self.portfolio['cash'] + self.portfolio['holdings']
+        self.portfolio['returns'] = self.portfolio['total'].pct_change()
+        del self.portfolio['positioninrs']
+
+    def plot_portfolio(self):
+        fig = plt.figure(figsize=(20,15))
+        ax = fig.add_subplot(111,ylabel="Portfolio_value")
+        ax.plot(self.portfolio['total'].index, self.portfolio['total'], label = "Portfolio value")
+        ax.plot(self.portfolio.loc[self.signals.positions == 1.0].index, self.portfolio.total[self.signals.positions==1.0], '^', markersize=10, color='g', label = "Bought")
+        ax.plot(self.portfolio.loc[self.signals.positions == -1.0].index, self.portfolio.total[self.signals.positions==-1.0], 'v', markersize=10, color='r', label = "Sold")
+        ax.legend()
+        plt.savefig('portfolio.png')
+        #plt.show()
+
+if __name__ == "__main__":
+    ticker = 'INFY.NS' #ticker
+    start_date = '2007-01-01'
+    end_date = '2017-12-31'
+    short_window = 50 
+    long_window = 200
+    capital = 100000
+    stocks_per_trade = 100
+
+    mvac = MovingAverageCrossover(ticker, capital, stocks_per_trade, start_date, end_date, short_window, long_window)
+    mvac.get_data()
+    mvac.calc_ma()
+    mvac.generate_signals()
+    mvac.backtest_portfolio()
+    mvac.plot_signals_with_ma()
+    mvac.plot_portfolio()
+
+    print("Portfolio total value on Dec 29, 2017 in Rs")
+    print(mvac.portfolio['total'].tail(1))
+
+    print("Absolute return as of Dec 29, 2018 in Rs")
+    print((((mvac.portfolio['total'].tail(1)/float(mvac.capital))-float(1))*100)*1000)
+
+
