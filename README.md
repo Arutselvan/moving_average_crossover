@@ -32,5 +32,5 @@ python3 ma_crossover.py
 
 ## Bugs
 
-Fix No look ahead bias
-Add comments
+* Fix No look ahead bias
+* Add comments`
