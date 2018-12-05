@@ -35,10 +35,12 @@ class MovingAverageCrossover:
     def generate_signals(self):
 
         """ Generate buy and sell trade signals """
-        self.close_price = self.close_price.shift(1) # to remove look ahead bias shift closing prices by 1 day
-        self.signals = pd.DataFrame(index=self.close_price.index)
+        self.close_price_temp = self.close_price.shift(1) # to remove look ahead bias shift closing prices by 1 day
+        self.signals = pd.DataFrame(index=self.close_price_temp.index)
         self.signals['signal'] = 0.0
-        self.signals['signal'][self.short_window:] = np.where(self.sma[self.short_window:]>self.lma[self.short_window:],1.0,0.0) #1 when short term average is greater than long term average
+        self.sma_temp = self.close_price_temp.rolling(window=self.short_window).mean() #calculate short term moving average with shifted values
+        self.lma_temp = self.close_price_temp.rolling(window=self.long_window).mean() #calculate long time moving average with shifted values
+        self.signals['signal'][self.short_window:] = np.where(self.sma_temp[self.short_window:]>self.lma_temp[self.short_window:],1.0,0.0) #1 when short term average is greater than long term average
         self.signals['positions'] = self.signals['signal'].diff() #diff will give 1 (buy signal) when sma crosses lma and -1 (sell) when lma crosses sma
 
     def plot_signals_with_ma(self):
