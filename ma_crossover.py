@@ -107,7 +107,7 @@ if __name__ == "__main__":
     print("Portfolio total value on Dec 29, 2017 in Rs")
     print(mvac.portfolio['total'].tail(1))  #get portfolio value on the last working day
 
-    print("Absolute return as of Dec 29, 2018 in Rs")
+    print("Absolute return as of Dec 29, 2017 in Rs")
     print((((mvac.portfolio['total'].tail(1)/float(mvac.capital))-float(1))*100)*1000) #Total returns in Rs
 
 
