@@ -1,3 +1,4 @@
+import argparse
 import pandas as pd
 import numpy as np
 from pandas_datareader import data
@@ -88,13 +89,32 @@ class MovingAverageCrossover:
         #plt.show()
 
 if __name__ == "__main__":
-    ticker = 'INFY.NS'
-    start_date = '2007-01-01'
-    end_date = '2017-12-31'
-    short_window = 50 
-    long_window = 200
-    capital = 100000
-    stocks_per_trade = 100
+    # ticker = 'INFY.NS'
+    # start_date = '2007-01-01'
+    # end_date = '2017-12-31'
+    # short_window = 50 
+    # long_window = 200
+    # capital = 100000
+    # stocks_per_trade = 100
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--ticker', help="The ticker for which you want test the moving average crossover strategy", required=True)
+    parser.add_argument('--start_date',help="Start date (must be earlier than the current date)", required=True)
+    parser.add_argument('--end_date',help="End date (must be earlier or equal to the current date)", required=True)
+    parser.add_argument('--short_window',type=int,help="Size of the short window (in days)", default=50)
+    parser.add_argument('--long_window',type=int,help="Size of the long window (in days)", default=200)
+    parser.add_argument('--capital',type=int,help="Starting capital amount", default=100000)
+    parser.add_argument('--stocks_per_trade',type=int,help="Number of stocks traded per buy/sell trade", default=100)
+    args = parser.parse_args()
+
+    ticker = args.ticker
+    start_date = args.start_date
+    end_date = args.end_date
+    short_window = args.short_window
+    long_window = args.long_window
+    capital = args.capital
+    stocks_per_trade = args.stocks_per_trade
+
 
     mvac = MovingAverageCrossover(ticker, capital, stocks_per_trade, start_date, end_date, short_window, long_window)
     mvac.get_data()
