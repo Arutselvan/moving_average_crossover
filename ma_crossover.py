@@ -89,14 +89,6 @@ class MovingAverageCrossover:
         #plt.show()
 
 if __name__ == "__main__":
-    # ticker = 'INFY.NS'
-    # start_date = '2007-01-01'
-    # end_date = '2017-12-31'
-    # short_window = 50 
-    # long_window = 200
-    # capital = 100000
-    # stocks_per_trade = 100
-
     parser = argparse.ArgumentParser()
     parser.add_argument('--ticker', help="The ticker for which you want test the moving average crossover strategy", required=True)
     parser.add_argument('--start_date',help="Start date (must be earlier than the current date)", required=True)
