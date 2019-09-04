@@ -17,8 +17,8 @@ class MovingAverageCrossover:
         self.long_window = long_window
 
     def get_data(self):
-        self.stock_data = data.DataReader(ticker,'yahoo',start_date,end_date) #get data from yahoo finance
-        self.close_price = self.stock_data['Close'] #get the closing prices
+        self.stock_data = data.DataReader(ticker,'yahoo',start_date,end_date) # get data from yahoo finance
+        self.close_price = self.stock_data['Close'] # get the closing prices
 
         """ Get all weekdays and fill dates with latest price when price is not available """
 
@@ -30,8 +30,8 @@ class MovingAverageCrossover:
 
         """ Function to calculate moving averages """
 
-        self.sma = self.close_price.rolling(window=self.short_window).mean() #calculate short term moving average
-        self.lma = self.close_price.rolling(window=self.long_window).mean() #calculate long term moving average
+        self.sma = self.close_price.rolling(window=self.short_window).mean() # calculate short term moving average
+        self.lma = self.close_price.rolling(window=self.long_window).mean() # calculate long term moving average
 
     def generate_signals(self):
 
@@ -39,10 +39,10 @@ class MovingAverageCrossover:
         self.close_price_temp = self.close_price.shift(1) # to remove look ahead bias shift closing prices by 1 day
         self.signals = pd.DataFrame(index=self.close_price_temp.index)
         self.signals['signal'] = 0.0
-        self.sma_temp = self.close_price_temp.rolling(window=self.short_window).mean() #calculate short term moving average with shifted values
-        self.lma_temp = self.close_price_temp.rolling(window=self.long_window).mean() #calculate long time moving average with shifted values
+        self.sma_temp = self.close_price_temp.rolling(window=self.short_window).mean() # calculate short term moving average with shifted values
+        self.lma_temp = self.close_price_temp.rolling(window=self.long_window).mean() # calculate long time moving average with shifted values
         self.signals['signal'][self.short_window:] = np.where(self.sma_temp[self.short_window:]>self.lma_temp[self.short_window:],1.0,0.0) #1 when short term average is greater than long term average
-        self.signals['positions'] = self.signals['signal'].diff() #diff will give 1 (buy signal) when sma crosses lma and -1 (sell) when lma crosses sma
+        self.signals['positions'] = self.signals['signal'].diff() # diff will give 1 (buy signal) when sma crosses lma and -1 (sell) when lma crosses sma
 
     def plot_signals_with_ma(self):
 
@@ -66,13 +66,13 @@ class MovingAverageCrossover:
         """ Backtesting the portfolio with initial capital equal to the specified amount """
 
         self.positions = pd.DataFrame(index=self.signals.index).fillna(0.0)
-        self.positions['positioninrs'] = self.stocks_per_trade*self.signals['signal'] #each position has stocks equal to stocks per trade specified
-        self.portfolio = self.positions.multiply(self.close_price, axis=0) #multiply positions with stock price on that day to get value
+        self.positions['positioninrs'] = self.stocks_per_trade*self.signals['signal'] # each position has stocks equal to stocks per trade specified
+        self.portfolio = self.positions.multiply(self.close_price, axis=0) # multiply positions with stock price on that day to get value
         self.pos_diff = self.positions.diff()
-        self.portfolio['holdings'] = (self.positions.multiply(self.close_price,axis=0)).sum(axis=1) #total amount in holdings
-        self.portfolio['cash'] = self.capital - (self.pos_diff.multiply(self.close_price,axis=0)).sum(axis=1).cumsum() #total in cash
-        self.portfolio['total'] = self.portfolio['cash'] + self.portfolio['holdings'] #total value
-        self.portfolio['returns'] = self.portfolio['total'].pct_change() #returns as percentage change
+        self.portfolio['holdings'] = (self.positions.multiply(self.close_price,axis=0)).sum(axis=1) # total amount in holdings
+        self.portfolio['cash'] = self.capital - (self.pos_diff.multiply(self.close_price,axis=0)).sum(axis=1).cumsum() # total in cash
+        self.portfolio['total'] = self.portfolio['cash'] + self.portfolio['holdings'] # total value
+        self.portfolio['returns'] = self.portfolio['total'].pct_change() # returns as percentage change
         del self.portfolio['positioninrs']
 
     def plot_portfolio(self):
@@ -117,9 +117,9 @@ if __name__ == "__main__":
     mvac.plot_portfolio()
 
     print("Portfolio total value on Dec 29, 2017 in Rs")
-    print(mvac.portfolio['total'].tail(1))  #get portfolio value on the last working day
+    print(mvac.portfolio['total'].tail(1))  # get portfolio value on the last working day
 
     print("Absolute return as of Dec 29, 2017 in Rs")
-    print(mvac.portfolio['total'].tail(1) - mvac.capital)#Total returns in Rs
+    print(mvac.portfolio['total'].tail(1) - mvac.capital) #Total returns
 
 
