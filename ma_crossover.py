@@ -91,8 +91,8 @@ class MovingAverageCrossover:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--ticker', help="The ticker for which you want test the moving average crossover strategy", required=True)
-    parser.add_argument('--start_date',help="Start date (must be earlier than the current date)", required=True)
-    parser.add_argument('--end_date',help="End date (must be earlier or equal to the current date)", required=True)
+    parser.add_argument('--start_date',help="Start date (YYYY-MM-DD) (must be earlier than the current date)", required=True)
+    parser.add_argument('--end_date',help="End date (YYYY-MM-DD) (must be earlier or equal to the current date)", required=True)
     parser.add_argument('--short_window',type=int,help="Size of the short window (in days)", default=50)
     parser.add_argument('--long_window',type=int,help="Size of the long window (in days)", default=200)
     parser.add_argument('--capital',type=int,help="Starting capital amount", default=100000)
@@ -120,6 +120,6 @@ if __name__ == "__main__":
     print(mvac.portfolio['total'].tail(1))  # get portfolio value on the last working day
 
     print("Absolute return as of Dec 29, 2017 in Rs")
-    print(mvac.portfolio['total'].tail(1) - mvac.capital) #Total returns
+    print(mvac.portfolio['total'].tail(1) - mvac.capital) # Total returns
 
 
