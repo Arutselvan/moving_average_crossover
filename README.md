@@ -1,6 +1,5 @@
-# Moving average crossover strategy
-
-Devising a moving average crossover strategy and backtest a portfolio
+# Moving average crossover
+A simple script to backtest the moving average crossover strategy
 
 ## Getting Started
 
