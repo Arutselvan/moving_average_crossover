@@ -7,6 +7,7 @@ Clone the repository and navigate to the project directory
 
 ```
 git clone https://github.com/Arutselvan/moving_average_crossover
+cd moving_average_crossover
 ```
 
 ### Prerequisites
