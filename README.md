@@ -26,7 +26,7 @@ sudo apt-get install python3-tk
 python3 -m pip install -r requirements.txt
 ```
 
-## Running the project
+## Usage
 
 ```
 python3 ma_crossover.py
