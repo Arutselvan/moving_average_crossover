@@ -3,7 +3,11 @@ A simple script to backtest the moving average crossover strategy
 
 ## Getting Started
 
-Clone the repository
+Clone the repository and navigate to the project directory
+
+```
+git clone https://github.com/Arutselvan/moving_average_crossover
+```
 
 ### Prerequisites
 
