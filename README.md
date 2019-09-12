@@ -28,8 +28,9 @@ python3 -m pip install -r requirements.txt
 
 ## Usage
 
+Example
 ```
-python3 ma_crossover.py
+python3 ma_crossover.py --ticker='INFY.NS' --start_date='2007-01-01' --end_date='2017-12-31'
 ```
 
 ## Bugs
