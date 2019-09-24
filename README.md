@@ -49,3 +49,8 @@ Example
 ```
 python3 ma_crossover.py --ticker='INFY.NS' --start_date='2007-01-01' --end_date='2017-12-31'
 ```
+
+Example with custom capital value
+```
+python3 ma_crossover.py --ticker='INFY.NS' --start_date='2007-01-01' --end_date='2017-12-31' --capital=250000
+```
