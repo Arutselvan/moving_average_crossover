@@ -47,10 +47,10 @@ optional arguments:
 
 Example
 ```
-python ma_crossover.py --ticker='INFY.NS' --start_date='2007-01-01' --end_date='2017-12-31'
+python ma_crossover.py --ticker='MSFT' --start_date='2007-01-01' --end_date='2017-12-31'
 ```
 
 Example with custom capital value
 ```
-python ma_crossover.py --ticker='INFY.NS' --start_date='2007-01-01' --end_date='2017-12-31' --capital=250000
+python ma_crossover.py --ticker='AAPL' --start_date='2007-01-01' --end_date='2017-12-31' --capital=250000
 ```
