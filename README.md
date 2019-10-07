@@ -2,6 +2,7 @@
 A simple script to backtest the moving average crossover strategy
 
 ![signals_with_ma](https://user-images.githubusercontent.com/18646185/87329901-5eb47c00-c555-11ea-97cd-123fb50ad8d6.png)
+![portfolio](https://user-images.githubusercontent.com/18646185/87329897-5d834f00-c555-11ea-83dc-196f56fc5fc3.png)
 
 ## Getting Started
 
