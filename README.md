@@ -1,6 +1,8 @@
 # Moving average crossover
 A simple script to backtest the moving average crossover strategy
 
+A sample Moving average and price graph of Microsoft with buy and sell signals between 2007-01-01 and 2017-12-31
+
 ![signals_with_ma](https://user-images.githubusercontent.com/18646185/87329901-5eb47c00-c555-11ea-97cd-123fb50ad8d6.png)
 ![portfolio](https://user-images.githubusercontent.com/18646185/87329897-5d834f00-c555-11ea-83dc-196f56fc5fc3.png)
 
