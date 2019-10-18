@@ -62,3 +62,6 @@ Example with custom capital value
 ```
 python ma_crossover.py --ticker='AAPL' --start_date='2007-01-01' --end_date='2017-12-31' --capital=250000
 ```
+
+## To Do
+- Add support for multiple tickers
